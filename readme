@@ -1,5 +1,5 @@
 
-UAV_code file is the code for IEEE IoTJ paper "Distributed and Collaborative Localization for Swarming UAVs".
+This is the code for IEEE IoTJ paper "Distributed and Collaborative Localization for Swarming UAVs".
 
 some of the notes are in Chinese and the code does not include the graph of connectivity.
 
