@@ -9,6 +9,7 @@ any questions please contact email binyang_2020@163.com.
 
 __If you find this project useful, we would be grateful if you cite the following paper：__
 
+```
 @article{chen2020distributed,  
   title={Distributed and collaborative localization for swarming UAVs},  
   author={Chen, Rui and Yang, Bin and Zhang, Wei},  
@@ -20,3 +21,4 @@ __If you find this project useful, we would be grateful if you cite the followin
   year={2020},  
   publisher={IEEE}  
 }
+```
