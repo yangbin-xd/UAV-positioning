@@ -11,7 +11,7 @@ __If you find this project useful, we would be grateful if you cite the followin
 
 ```
 @article{chen2020distributed,  
-  title={Distributed and collaborative localization for swarming UAVs},  
+  title={Distributed and collaborative localization for swarming {UAVs}},  
   author={Chen, Rui and Yang, Bin and Zhang, Wei},  
   journal={IEEE Internet Things J.},  
   volume={8},  
