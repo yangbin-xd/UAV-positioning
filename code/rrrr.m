@@ -1,7 +1,7 @@
 
 clear;clc;close all;
 
-load data1rr;load data2rr;load data3rr;load data4rr;
+load data1r;load data2r;load data3r;load data4r;
 MAP=real(MAP);MAPP=real(MAPP);SMDSP=real(SMDSP);SMDS=real(SMDS);
 Jan_O=MAP(:,1);Feb_O=MAP(:,2);Mar_O=MAP(:,3);Apr_O=MAP(:,4);
 May_O=MAP(:,5);Jun_O=MAP(:,6);Jul_O=MAP(:,7);
@@ -51,5 +51,5 @@ hLegend = legend(box_vars([32,39,23,11,16]), {'GPS','MDS-MAP','MDS-MAP(P)','SMDS
 % xlabel('r(m)','FontSize',15);
 xlabel('$r$(m)','interpreter','latex','fontsize',15);% M
 ylabel('Error(m)');
-set(gca,'XLim',[0.8 7]);%X轴的数据显示范围
-set(gca,'YLim',[0 5]);%X轴的数据显示范围
+set(gca,'XLim',[0.8 7]);%X杞寸殑鏁版嵁鏄剧ず鑼冨洿
+set(gca,'YLim',[0 5]);%X杞寸殑鏁版嵁鏄剧ず鑼冨洿
