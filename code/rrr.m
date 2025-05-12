@@ -1,6 +1,6 @@
 
 % MDS-MAP  MDS_MAP(P)  SMDS  SMDS(P)
-% ±È½ÏËÄÖÖËã·¨µÄ¶¨Î»Îó²îÓëÍ¨ĞÅ·¶Î§µÄ¹ØÏµ
+% æ¯”è¾ƒå››ç§ç®—æ³•çš„å®šä½è¯¯å·®ä¸é€šä¿¡èŒƒå›´çš„å…³ç³»
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                         %
@@ -9,31 +9,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear;clc;close all;tic;
 
-N=50;          %¶¥µãÊı
-eta=3;         %Î¬Êı
-r=50;        %Í¨ĞÅ·¶Î§
-de=0.5;        %²â¾àÎó²î
-ae=2;        %²â½ÇÎó²î
-a=0.2;        %GPSÅä±È
-total=10000;        %Ñ­»·´ÎÊı(time=total/10)
+N=50;          %é¡¶ç‚¹æ•°
+eta=3;         %ç»´æ•°
+r=50;        %é€šä¿¡èŒƒå›´
+de=0.5;        %æµ‹è·è¯¯å·®
+ae=2;        %æµ‹è§’è¯¯å·®
+a=0.2;        %GPSé…æ¯”
+total=10000;        %å¾ªç¯æ¬¡æ•°(time=total/10)
 
 for r=40:10:100
 z=1;
 while z~=total+1
 
-X=rand(N,eta)*100-50;        %Éú³É[-50£¬50]µÄ¶¥µã
+X=rand(N,eta)*100-50;        %ç”Ÿæˆ[-50ï¼Œ50]çš„é¡¶ç‚¹
 nosie1=normrnd(0,5/3,N,1);
 nosie2=normrnd(0,5/3,N,1);
 nosie3=normrnd(0,10/3,N,1);
 noise_GPS=[nosie1,nosie2,nosie3];
-Xgps=X+noise_GPS;        %GPS¶¨Î»Îó²î
+Xgps=X+noise_GPS;        %GPSå®šä½è¯¯å·®
 
-num=[];        %ID¼¯ºÏ
+num=[];        %IDé›†åˆ
 for num1=1:N
     num=[num;num1];
 end
 num=num2cell(num);
-% figure(1);        %½ÚµãÍØÆËÍ¼    
+% figure(1);        %èŠ‚ç‚¹æ‹“æ‰‘å›¾    
 % scatter3(X(:,1),X(:,2),X(:,3),'ko');hold on;
 % text(X(:,1)+2,X(:,2)+0.5,X(:,3)+0.5,num);
 % xlabel('x'),ylabel('y'),zlabel('z');
@@ -42,9 +42,9 @@ num=num2cell(num);
 % set(gca,'YTick',-60:20:60);
 % set(gca,'ZTick',-60:20:60);
 
-% Í¨ĞÅ·¶Î§ÄÚ½Úµã¼äÁ¬Ïß
-d=zeros(N);        %¾àÀë¾ØÕó
-H=zeros(N);        %ÁÚ½Ó¾ØÕó
+% é€šä¿¡èŒƒå›´å†…èŠ‚ç‚¹é—´è¿çº¿
+d=zeros(N);        %è·ç¦»çŸ©é˜µ
+H=zeros(N);        %é‚»æ¥çŸ©é˜µ
 for i=1:N
     for j=1:N
         if sqrt((X(i,1)-X(j,1))^2+(X(i,2)-X(j,2))^2+(X(i,3)-X(j,3))^2)<=r
@@ -59,19 +59,19 @@ for i=1:N
 end
 % legend('UAV','link');
 
-noise=normrnd(0,de/3,N,N);       %²â¾àÎó²î
+noise=normrnd(0,de/3,N,N);       %æµ‹è·è¯¯å·®
 dn=d+noise;
-dn=dn-diag(diag(dn));        %Ö÷¶Ô½ÇÏßÔªËØÖÃÁã
-dn=1/2*(dn+dn');        %Æ½¾ù²â¾à½á¹û
+dn=dn-diag(diag(dn));        %ä¸»å¯¹è§’çº¿å…ƒç´ ç½®é›¶
+dn=1/2*(dn+dn');        %å¹³å‡æµ‹è·ç»“æœ
 
 % MDS-MAP
 D=zeros(N,N);
-[D,R]=floyd(dn);        %FloydËã·¨
-J=eye(N)-1/N*ones(N);        %ÖĞĞÄ»¯¾ØÕó
-B=-1/2*J*(D.^2)*J;        %¶ş´ÎÖĞĞÄ»¯
+[D,R]=floyd(dn);        %Floydç®—æ³•
+J=eye(N)-1/N*ones(N);        %ä¸­å¿ƒåŒ–çŸ©é˜µ
+B=-1/2*J*(D.^2)*J;        %äºŒæ¬¡ä¸­å¿ƒåŒ–
 try
-[V,D]=eigs(B,eta,'la');        %ÌØÕ÷Öµ·Ö½â
-X1=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %Ïà¶Ô×ø±ê
+[V,D]=eigs(B,eta,'la');        %ç‰¹å¾å€¼åˆ†è§£
+X1=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %ç›¸å¯¹åæ ‡
 
 n=N*a;        
 for i=1:n
@@ -79,11 +79,11 @@ for i=1:n
     Y1(i,:)=X1(i,:);
 end
 
-%×ø±ê±ä»»(½«Ïà¶Ô×ø±êX1±ä»»µ½GPS¶¨Î»×ø±êXgpsÉÏ)
+%åæ ‡å˜æ¢(å°†ç›¸å¯¹åæ ‡X1å˜æ¢åˆ°GPSå®šä½åæ ‡Xgpsä¸Š)
 Ygps_mean=Ygps-(sum(Ygps)'/n*ones(1,n))';Ygps_mean=Ygps_mean';
 Y1_mean=Y1-(sum(Y1)'/n*ones(1,n))';Y1_mean=Y1_mean';
 P=Ygps_mean*Y1_mean';
-[U,S,V]=svd(P);        %ÆæÒìÖµ·Ö½â
+[U,S,V]=svd(P);        %å¥‡å¼‚å€¼åˆ†è§£
 R=U*V';t=sum(Ygps)'/n-sum(Y1)'/n;
 Y1=R*Y1';Y1=Y1';
 s=sum(Ygps)/n-sum(Y1)/n;X1=X1';
@@ -91,7 +91,7 @@ X2=zeros(eta,N);
 for i=1:N
     X2(:,i)=R*X1(:,i)+s';
 end
-X2=X2';        %±ä»»ºóµÄ¾ø¶Ô×ø±êX2
+X2=X2';        %å˜æ¢åçš„ç»å¯¹åæ ‡X2
 
 MAP_err=0;GPS_err=0;
 for i=1:N
@@ -99,7 +99,7 @@ for i=1:N
     GPS_err=GPS_err+sqrt((X(i,1)-Xgps(i,1))^2+(X(i,2)-Xgps(i,2))^2+(X(i,3)-Xgps(i,3))^2);
 end
 MAP_e(z)=MAP_err/N;GPS(z)=GPS_err/N;
-if MAP_e(z)~=0        %±£Ö¤ÓĞĞ§ÅÜtotal´Î
+if MAP_e(z)~=0        %ä¿è¯æœ‰æ•ˆè·‘totalæ¬¡
     z=z+1;
 end
 end
@@ -113,7 +113,7 @@ figure(2);
 boxplot(MAP,'Labels',{'40','50','60','70','80','90','100'},'Whisker',1.5);
 % boxplot(MAP,'Labels',{'40','50','60','70','80','90','100','110','120','130','140','150','160','170','180','190','200'},'Whisker',1.5);
 xlabel('range(m)');ylabel('error(m)');
-save data1;
+save data1r;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                         %
@@ -122,31 +122,31 @@ save data1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear;clc;close all;
 
-N=50;          %¶¥µãÊı
-eta=3;         %Î¬Êı
-r=50;        %Í¨ĞÅ·¶Î§
-de=0.5;        %²â¾àÎó²î
-ae=2;        %²â½ÇÎó²î
-a=0.2;        %GPSÅä±È
-total=10000;        %Ñ­»·´ÎÊı(time=total)
+N=50;          %é¡¶ç‚¹æ•°
+eta=3;         %ç»´æ•°
+r=50;        %é€šä¿¡èŒƒå›´
+de=0.5;        %æµ‹è·è¯¯å·®
+ae=2;        %æµ‹è§’è¯¯å·®
+a=0.2;        %GPSé…æ¯”
+total=10000;        %å¾ªç¯æ¬¡æ•°(time=total)
 
 for r=40:10:100
 zp=1;MAPP_e=zeros(1,total);
 while zp~=total+1
 
-X=rand(N,eta)*100-50;        %Éú³É[-50£¬50]µÄ¶¥µã
+X=rand(N,eta)*100-50;        %ç”Ÿæˆ[-50ï¼Œ50]çš„é¡¶ç‚¹
 nosie1=normrnd(0,5/3,N,1);
 nosie2=normrnd(0,5/3,N,1);
 nosie3=normrnd(0,10/3,N,1);
 noise_GPS=[nosie1,nosie2,nosie3];
-Xgps=X+noise_GPS;        %GPS¶¨Î»Îó²î
+Xgps=X+noise_GPS;        %GPSå®šä½è¯¯å·®
 
-num=[];        %ID¼¯ºÏ
+num=[];        %IDé›†åˆ
 for num1=1:N
     num=[num;num1];
 end
 num=num2cell(num);
-% figure(1);        %½ÚµãÍØÆËÍ¼    
+% figure(1);        %èŠ‚ç‚¹æ‹“æ‰‘å›¾    
 % scatter3(X(:,1),X(:,2),X(:,3),'ko');hold on;
 % text(X(:,1)+2,X(:,2)+0.5,X(:,3)+0.5,num);
 % xlabel('x'),ylabel('y'),zlabel('z');
@@ -155,9 +155,9 @@ num=num2cell(num);
 % set(gca,'YTick',-60:20:60);
 % set(gca,'ZTick',-60:20:60);
 
-% Í¨ĞÅ·¶Î§ÄÚ½Úµã¼äÁ¬Ïß
-d=zeros(N);        %¾àÀë¾ØÕó
-H=zeros(N);        %ÁÚ½Ó¾ØÕó
+% é€šä¿¡èŒƒå›´å†…èŠ‚ç‚¹é—´è¿çº¿
+d=zeros(N);        %è·ç¦»çŸ©é˜µ
+H=zeros(N);        %é‚»æ¥çŸ©é˜µ
 for i=1:N
     for j=1:N
         if sqrt((X(i,1)-X(j,1))^2+(X(i,2)-X(j,2))^2+(X(i,3)-X(j,3))^2)<=r
@@ -172,53 +172,53 @@ for i=1:N
 end
 % legend('UAV','link');
 
-noise=normrnd(0,de/3,N,N);       %²â¾àÎó²î
+noise=normrnd(0,de/3,N,N);       %æµ‹è·è¯¯å·®
 dn=d+noise;
-dn=dn-diag(diag(dn));        %Ö÷¶Ô½ÇÏßÔªËØÖÃÁã
-dn=1/2*(dn+dn');        %Æ½¾ù²â¾à½á¹û
+dn=dn-diag(diag(dn));        %ä¸»å¯¹è§’çº¿å…ƒç´ ç½®é›¶
+dn=1/2*(dn+dn');        %å¹³å‡æµ‹è·ç»“æœ
 
 % MDS-MAP(P)
-H1=H-eye(N);        %Á¬Í¨¾ØÕó(Ö÷¶Ô½ÇÏßÔªËØÖÃÁã)
-c=H1*ones(N,1);        %Á¬Í¨¶È
+H1=H-eye(N);        %è¿é€šçŸ©é˜µ(ä¸»å¯¹è§’çº¿å…ƒç´ ç½®é›¶)
+c=H1*ones(N,1);        %è¿é€šåº¦
 nat=(1:N);
 for i=1:N-1
     nat=[nat;(1:N)];
 end
-adj=H.*nat;        %ÁÚ½Ó¾ØÕó(°üº¬ÁãÔªËØ£¬Ê¹ÓÃÊ±ĞèÏÈÉ¾³ı)
+adj=H.*nat;        %é‚»æ¥çŸ©é˜µ(åŒ…å«é›¶å…ƒç´ ï¼Œä½¿ç”¨æ—¶éœ€å…ˆåˆ é™¤)
 
-% Ñ¡¶¨³õÊ¼µã£¬Á¬Í¨¶È×î´óµÄµã
-% ½¨Á¢³õÊ¼µØÍ¼
+% é€‰å®šåˆå§‹ç‚¹ï¼Œè¿é€šåº¦æœ€å¤§çš„ç‚¹
+% å»ºç«‹åˆå§‹åœ°å›¾
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 x=find(c==max(c));
 cu=adj(x,:);
-cu(find(cu==0))=[];        %É¾³ıÁãÔªËØ
-[row,col]=size(cu);        %Ö»ÓÃcol
+cu(find(cu==0))=[];        %åˆ é™¤é›¶å…ƒç´ 
+[row,col]=size(cu);        %åªç”¨col
 n=col;
 d1=zeros(n);
 for i=1:n
     for j=1:n
-        d1(i,j)=dn(cu(i),cu(j));        %¾Ö²¿¾àÀë¾ØÕó
+        d1(i,j)=dn(cu(i),cu(j));        %å±€éƒ¨è·ç¦»çŸ©é˜µ
     end
 end
 D=zeros(n,n);
-[D,R]=floyd(d1);        %FloydËã·¨
-J=eye(n)-1/n*ones(n);        %ÖĞĞÄ»¯¾ØÕó
-B=-1/2*J*(D.^2)*J;        %¶ş´ÎÖĞĞÄ»¯
+[D,R]=floyd(d1);        %Floydç®—æ³•
+J=eye(n)-1/n*ones(n);        %ä¸­å¿ƒåŒ–çŸ©é˜µ
+B=-1/2*J*(D.^2)*J;        %äºŒæ¬¡ä¸­å¿ƒåŒ–
 try
-[V,D]=eigs(B,eta,'la');        %ÌØÕ÷Öµ·Ö½â
-X1=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %Ïà¶Ô×ø±ê
+[V,D]=eigs(B,eta,'la');        %ç‰¹å¾å€¼åˆ†è§£
+X1=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %ç›¸å¯¹åæ ‡
 end
 
 FM=cu;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ¼ÆËã¹«¹²µã
-% ¸üĞÂÁ¬Í¨¶È
-% Ñ­»·Ñ¡¶¨ÏÂÒ»¸öµã
+% è®¡ç®—å…¬å…±ç‚¹
+% æ›´æ–°è¿é€šåº¦
+% å¾ªç¯é€‰å®šä¸‹ä¸€ä¸ªç‚¹
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 z=1;zz=1;
-while col~=N&&zz~=N        %»¹ÓĞÎ´¶¨Î»µÄµã
+while col~=N&&zz~=N        %è¿˜æœ‰æœªå®šä½çš„ç‚¹
 
-SAM=zeros(col);        %¹«¹²½Úµã
+SAM=zeros(col);        %å…¬å…±èŠ‚ç‚¹
 for i=1:col
     cu=adj(FM(i),:);
     cu(find(cu==0))=[];
@@ -226,12 +226,12 @@ for i=1:col
     for j=1:col
         same=same+length(find(cu==FM(j)));
     end
-    c(FM(i))=c(FM(i))-same+1;        %¼ÓÉÏ×ÔÉí
+    c(FM(i))=c(FM(i))-same+1;        %åŠ ä¸Šè‡ªèº«
     [row1,col1]=size(intersect(cu,FM));
     SAM(i,1:col1)=intersect(cu,FM);
 end
 
-% É¸Ñ¡£¬ÖÁÉÙÓĞËÄ¸ö¹«¹²½ÚµãµÄ´ØÍ·
+% ç­›é€‰ï¼Œè‡³å°‘æœ‰å››ä¸ªå…¬å…±èŠ‚ç‚¹çš„ç°‡å¤´
 [row2,col2]=size(FM);
 for i=1:col2
     if SAM(i,4)==0
@@ -239,60 +239,60 @@ for i=1:col2
     end
 end
 
-% Ñ¡ÔñÁ¬Í¨¶È×î´óµÄµã
+% é€‰æ‹©è¿é€šåº¦æœ€å¤§çš„ç‚¹
 xx=find(c(FM)==max(c(FM)));
 x1=FM(xx(1));
 FM1=adj(x1,:);
-FM1(find(FM1==0))=[];        %É¾³ıÁãÔªËØ
+FM1(find(FM1==0))=[];        %åˆ é™¤é›¶å…ƒç´ 
 [row3,col3]=size(FM1);
 n=col3;
 d1=zeros(n);
 for i=1:n
     for j=1:n
-        d1(i,j)=d(FM1(i),FM1(j));        %¾Ö²¿¾àÀë¾ØÕó
+        d1(i,j)=d(FM1(i),FM1(j));        %å±€éƒ¨è·ç¦»çŸ©é˜µ
     end
 end
 D=zeros(n,n);
-[D,R]=floyd(d1);        %FloydËã·¨
-J=eye(n)-1/n*ones(n);        %ÖĞĞÄ»¯¾ØÕó
-B=-1/2*J*(D.^2)*J;        %¶ş´ÎÖĞĞÄ»¯
+[D,R]=floyd(d1);        %Floydç®—æ³•
+J=eye(n)-1/n*ones(n);        %ä¸­å¿ƒåŒ–çŸ©é˜µ
+B=-1/2*J*(D.^2)*J;        %äºŒæ¬¡ä¸­å¿ƒåŒ–
 try
-[V,D]=eigs(B,eta,'la');        %ÌØÕ÷Öµ·Ö½â
-X2=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %Ïà¶Ô×ø±ê
+[V,D]=eigs(B,eta,'la');        %ç‰¹å¾å€¼åˆ†è§£
+X2=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %ç›¸å¯¹åæ ‡
 
-% ½«X1ÓëX2½øĞĞ·ìºÏ
-% È·¶¨¹«¹²µã
+% å°†X1ä¸X2è¿›è¡Œç¼åˆ
+% ç¡®å®šå…¬å…±ç‚¹
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FM=unique(FM);FM1=unique(FM1);
 sam=intersect(FM,FM1);
 
-% »ñÈ¡¹«¹²µãÔÚX1ºÍX2ÖĞ×ø±ê
-[tf1 loc1]=ismember(sam,FM);        %locÎª¹«¹²µãÔÚX1ÖĞÎ»ÖÃ
-[tf2 loc2]=ismember(sam,FM1);        %loc1Îª¹«¹²µãÔÚX2ÖĞÎ»ÖÃ
-[row4,col4]=size(loc1);        %col4Îª¹«¹²µã¸öÊı
+% è·å–å…¬å…±ç‚¹åœ¨X1å’ŒX2ä¸­åæ ‡
+[tf1 loc1]=ismember(sam,FM);        %locä¸ºå…¬å…±ç‚¹åœ¨X1ä¸­ä½ç½®
+[tf2 loc2]=ismember(sam,FM1);        %loc1ä¸ºå…¬å…±ç‚¹åœ¨X2ä¸­ä½ç½®
+[row4,col4]=size(loc1);        %col4ä¸ºå…¬å…±ç‚¹ä¸ªæ•°
 
-%×îĞ¡¶ş³Ë×ø±ê±ä»»
+%æœ€å°äºŒä¹˜åæ ‡å˜æ¢
 mu1=0;mu2=0;
 P1=X1(loc1(1),:);P2=X2(loc2(1),:);
 for i=2:col4
-    P1=[P1;X1(loc1(i),:)];        %¹«¹²µãÔÚX1ÖĞ×ø±ê
-    P2=[P2;X2(loc2(i),:)];        %¹«¹²µãÔÚX2ÖĞ×ø±ê
+    P1=[P1;X1(loc1(i),:)];        %å…¬å…±ç‚¹åœ¨X1ä¸­åæ ‡
+    P2=[P2;X2(loc2(i),:)];        %å…¬å…±ç‚¹åœ¨X2ä¸­åæ ‡
 end
-mu1=sum(P1)/col4;mu2=sum(P2)/col4;        %Çó¹«¹²µãµÄÆ½¾ùÖµ
+mu1=sum(P1)/col4;mu2=sum(P2)/col4;        %æ±‚å…¬å…±ç‚¹çš„å¹³å‡å€¼
 P11=P1';P22=P2';
 mu1=mu1';mu2=mu2';
 P11=P11-mu1*ones(1,col4);P22=P22-mu2*ones(1,col4);
 [U,S,V]=svd(P11*P22');
-R=U*V';        %Ğı×ª¾ØÕó
-t=(sum(P1)-sum((R*P2')'))/col4;        %Æ½ÒÆÏòÁ¿
+R=U*V';        %æ—‹è½¬çŸ©é˜µ
+t=(sum(P1)-sum((R*P2')'))/col4;        %å¹³ç§»å‘é‡
 X2=R*X2'+t'*ones(1,col3);X2=X2';
 
-%¸üĞÂX1£¬¹«¹²µãÈ¡X1ÓëX2µÄÆ½¾ùÖµ
+%æ›´æ–°X1ï¼Œå…¬å…±ç‚¹å–X1ä¸X2çš„å¹³å‡å€¼
 fm=FM;
 fm1=FM1;
 FM=[FM,FM1];
-FM=unique(FM);        %¸üĞÂFM    
-[row5,col]=size(FM);        %col5Îª¸üĞÂºóFMÖĞÔªËØ¸öÊı
+FM=unique(FM);        %æ›´æ–°FM    
+[row5,col]=size(FM);        %col5ä¸ºæ›´æ–°åFMä¸­å…ƒç´ ä¸ªæ•°
 
 X3=zeros(col,eta);
 for i=1:col
@@ -329,11 +329,11 @@ for i=1:n
     Y1(i,:)=X1(i,:);
 end
 
-%×ø±ê±ä»»(½«Ïà¶Ô×ø±êX1±ä»»µ½GPS¶¨Î»×ø±êXgpsÉÏ)
+%åæ ‡å˜æ¢(å°†ç›¸å¯¹åæ ‡X1å˜æ¢åˆ°GPSå®šä½åæ ‡Xgpsä¸Š)
 Ygps_mean=Ygps-(sum(Ygps)'/n*ones(1,n))';Ygps_mean=Ygps_mean';
 Y1_mean=Y1-(sum(Y1)'/n*ones(1,n))';Y1_mean=Y1_mean';
 P=Ygps_mean*Y1_mean';
-[U,S,V]=svd(P);        %ÆæÒìÖµ·Ö½â
+[U,S,V]=svd(P);        %å¥‡å¼‚å€¼åˆ†è§£
 R=U*V';t=sum(Ygps)'/n-sum(Y1)'/n;
 Y1=R*Y1';Y1=Y1';
 s=sum(Ygps)/n-sum(Y1)/n;X1=X1';
@@ -341,7 +341,7 @@ X2=zeros(eta,N);
 for i=1:N
     X2(:,i)=R*X1(:,i)+s';
 end
-X2=X2';        %±ä»»ºóµÄ¾ø¶Ô×ø±êX2
+X2=X2';        %å˜æ¢åçš„ç»å¯¹åæ ‡X2
 
 MAPP_err=0;GPS_err=0;
 for i=1:N
@@ -349,7 +349,7 @@ for i=1:N
     GPS_err=GPS_err+sqrt((X(i,1)-Xgps(i,1))^2+(X(i,2)-Xgps(i,2))^2+(X(i,3)-Xgps(i,3))^2);
 end
 MAPP_e(zp)=MAPP_err/N;GPS(zp)=GPS_err/N;
-if MAPP_e(zp)~=0        %±£Ö¤ÓĞĞ§ÅÜtotal´Î
+if MAPP_e(zp)~=0        %ä¿è¯æœ‰æ•ˆè·‘totalæ¬¡
     zp=zp+1;
 end
 end
@@ -361,7 +361,7 @@ end
 figure(2);
 boxplot(MAPP,'Labels',{'40','50','60','70','80','90','100'},'Whisker',1.5);
 xlabel('range(m)');ylabel('error(m)');
-save data2;
+save data2r;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                         %
@@ -370,31 +370,31 @@ save data2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear;clc;close all;
 
-N=50;          %¶¥µãÊı
-eta=3;         %Î¬Êı
-r=50;        %Í¨ĞÅ·¶Î§
-de=0.5;        %²â¾àÎó²î
-ae=2;        %²â½ÇÎó²î
-a=0.2;        %GPSÅä±È
-total=10000;        %Ñ­»·´ÎÊı(time=total/2)
+N=50;          %é¡¶ç‚¹æ•°
+eta=3;         %ç»´æ•°
+r=50;        %é€šä¿¡èŒƒå›´
+de=0.5;        %æµ‹è·è¯¯å·®
+ae=2;        %æµ‹è§’è¯¯å·®
+a=0.2;        %GPSé…æ¯”
+total=10000;        %å¾ªç¯æ¬¡æ•°(time=total/2)
 
 for r=40:10:100
 zp=1;
 while zp~=total+1
 
-X=rand(N,eta)*100-50;        %Éú³É[-50£¬50]µÄ¶¥µã
+X=rand(N,eta)*100-50;        %ç”Ÿæˆ[-50ï¼Œ50]çš„é¡¶ç‚¹
 nosie1=normrnd(0,5/3,N,1);
 nosie2=normrnd(0,5/3,N,1);
 nosie3=normrnd(0,10/3,N,1);
 noise_GPS=[nosie1,nosie2,nosie3];
-Xgps=X+noise_GPS;        %GPS¶¨Î»Îó²î
+Xgps=X+noise_GPS;        %GPSå®šä½è¯¯å·®
 
-num=[];        %ID¼¯ºÏ
+num=[];        %IDé›†åˆ
 for num1=1:N
     num=[num;num1];
 end
 num=num2cell(num);
-% figure(1);        %½ÚµãÍØÆËÍ¼    
+% figure(1);        %èŠ‚ç‚¹æ‹“æ‰‘å›¾    
 % scatter3(X(:,1),X(:,2),X(:,3),'ko');hold on;
 % text(X(:,1)+2,X(:,2)+0.5,X(:,3)+0.5,num);
 % xlabel('x'),ylabel('y'),zlabel('z');
@@ -403,9 +403,9 @@ num=num2cell(num);
 % set(gca,'YTick',-60:20:60);
 % set(gca,'ZTick',-60:20:60);
 
-% Í¨ĞÅ·¶Î§ÄÚ½Úµã¼äÁ¬Ïß
-d=zeros(N);        %¾àÀë¾ØÕó
-H=zeros(N);        %ÁÚ½Ó¾ØÕó
+% é€šä¿¡èŒƒå›´å†…èŠ‚ç‚¹é—´è¿çº¿
+d=zeros(N);        %è·ç¦»çŸ©é˜µ
+H=zeros(N);        %é‚»æ¥çŸ©é˜µ
 for i=1:N
     for j=1:N
         if sqrt((X(i,1)-X(j,1))^2+(X(i,2)-X(j,2))^2+(X(i,3)-X(j,3))^2)<=r
@@ -420,23 +420,23 @@ for i=1:N
 end
 % legend('UAV','link');
 
-noise=normrnd(0,de/3,N,N);       %²â¾àÎó²î
+noise=normrnd(0,de/3,N,N);       %æµ‹è·è¯¯å·®
 dn=d+noise;
-dn=dn-diag(diag(dn));        %Ö÷¶Ô½ÇÏßÔªËØÖÃÁã
-dn=1/2*(dn+dn');        %Æ½¾ù²â¾à½á¹û
+dn=dn-diag(diag(dn));        %ä¸»å¯¹è§’çº¿å…ƒç´ ç½®é›¶
+dn=1/2*(dn+dn');        %å¹³å‡æµ‹è·ç»“æœ
 
 % MDS-MAP
-H=H-eye(N);        %ÁÚ½Ó¾ØÕó
-c=H*ones(N,1);        %Á¬Í¨¶È
-d=d-diag(diag(d));        %Ö÷¶Ô½ÇÏßÔªËØÖÃÁã£¨ÔëÉù£©
+H=H-eye(N);        %é‚»æ¥çŸ©é˜µ
+c=H*ones(N,1);        %è¿é€šåº¦
+d=d-diag(diag(d));        %ä¸»å¯¹è§’çº¿å…ƒç´ ç½®é›¶ï¼ˆå™ªå£°ï¼‰
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Ñ¡¶¨³õÊ¼µã£¬Ñ¡ÔñÁ¬Í¨¶È×î´óµÄµã
+% é€‰å®šåˆå§‹ç‚¹ï¼Œé€‰æ‹©è¿é€šåº¦æœ€å¤§çš„ç‚¹
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 x=find(c==max(c));
 CU=[x(1)];
 
-LN=zeros(N);        %´Ø¾ØÕó
+LN=zeros(N);        %ç°‡çŸ©é˜µ
 for i=1:N
     z=find(H(i,:)==max(H(i,:)));
     [row,column]=size(z);
@@ -446,21 +446,21 @@ end
 FM=LN(x(1),:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% ¶ÔÑ¡¶¨µÄ´Ø½øĞĞSMDS
+% å¯¹é€‰å®šçš„ç°‡è¿›è¡ŒSMDS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FM(find(FM==0))=[];        %É¾³ıÁãÔªËØ
+FM(find(FM==0))=[];        %åˆ é™¤é›¶å…ƒç´ 
 [row1,column1]=size(FM);
 v=zeros(column1,eta);
 
 for i=1:column1
-    v(i,:)=X(FM(i),:)-X(x(1),:);        %Éú³ÉÏòÁ¿£¨ÀûÓÃÊµ¼Ê×ø±ê£©
+    v(i,:)=X(FM(i),:)-X(x(1),:);        %ç”Ÿæˆå‘é‡ï¼ˆåˆ©ç”¨å®é™…åæ ‡ï¼‰
     vn(i,:)=v(i,:)/norm(v(i,:))*dn(FM(i),x(1));
 end
 
 K=zeros(column1);
 for i=1:column1
     for j=1:column1
-        K(i,j)=dot(v(i,:),v(j,:));        %Éú³É¾ØÕó
+        K(i,j)=dot(v(i,:),v(j,:));        %ç”ŸæˆçŸ©é˜µ
     end
 end
 theta=zeros(column1);
@@ -472,10 +472,10 @@ for i=1:column1
 end
 theta=abs(theta)/2/pi*360;
 angle_noise=normrnd(0,ae/3,column1,column1);
-theta=theta+angle_noise;        %²â½ÇÎó²î
+theta=theta+angle_noise;        %æµ‹è§’è¯¯å·®
 theta=theta/360*2*pi;
 
-%Éú³ÉÓĞÎó²îµÄK
+%ç”Ÿæˆæœ‰è¯¯å·®çš„K
 for i=1:column1
     for j=1:column1
         K(i,j)=norm(vn(i,:))*norm(vn(j,:))*cos(theta(i,j));
@@ -483,7 +483,7 @@ for i=1:column1
 end
 
 % nystrom SMDS
-p=column1-1;        %·½Õó
+p=column1-1;        %æ–¹é˜µ
 A=K(1:p,1:p);
 T=K(1:p,p+1:column1);
 [V,D]=eigs(A,eta,'la');
@@ -492,19 +492,19 @@ V_A=V(:,1:eta)*D(1:eta,1:eta).^(1/2);
 V_T=(pinv(V_A)*T)';
 V_AT=[V_A;V_T];
 XX1=V_AT;
-X1=[0,0,0;V_AT];        % X1Îª³õÊ¼ÍØÆËÍ¼
+X1=[0,0,0;V_AT];        % X1ä¸ºåˆå§‹æ‹“æ‰‘å›¾
 
-% Ñ­»·Ñ¡¶¨ÏÂÒ»¸öµã
-% ¸üĞÂÁ¬Í¨¶È
-% ¼ÆËã¹«¹²µã
+% å¾ªç¯é€‰å®šä¸‹ä¸€ä¸ªç‚¹
+% æ›´æ–°è¿é€šåº¦
+% è®¡ç®—å…¬å…±ç‚¹
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 zz=1;zzz=1;
-while column1~=N&&zzz~=N        %»¹ÓĞÎ´¶¨Î»µÄµã
+while column1~=N&&zzz~=N        %è¿˜æœ‰æœªå®šä½çš„ç‚¹
 
 % for zz=1:5
 
-SAM=zeros(column1);        %¹«¹²½Úµã
+SAM=zeros(column1);        %å…¬å…±èŠ‚ç‚¹
 for i=1:column1
     CLU=LN(FM(i),:);
     CLU(find(CLU==0))=[];
@@ -517,7 +517,7 @@ for i=1:column1
     SAM(i,1:column2)=intersect(CLU,FM);
 end
 
-% É¸Ñ¡£¬ÖÁÉÙÓĞËÄ¸ö¹«¹²½ÚµãµÄ´ØÍ·£¬¼´SAMÖĞ²»È«Áã(´ı²¹³ä)
+% ç­›é€‰ï¼Œè‡³å°‘æœ‰å››ä¸ªå…¬å…±èŠ‚ç‚¹çš„ç°‡å¤´ï¼Œå³SAMä¸­ä¸å…¨é›¶(å¾…è¡¥å……)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [row10,column10]=size(FM);
 for i=1:column10
@@ -526,26 +526,26 @@ for i=1:column10
     end
 end
 
-% Ñ¡ÔñÁ¬Í¨¶È×î´óµÄµã
+% é€‰æ‹©è¿é€šåº¦æœ€å¤§çš„ç‚¹
 xx=find(c(FM)==max(c(FM)));
 x_1=FM(xx(1));
 % q(qq)=x_1;
 CU=[CU,x_1];
 FM1=LN(x_1,:);
 
-FM1(find(FM1==0))=[];        %É¾³ıÁãÔªËØ
+FM1(find(FM1==0))=[];        %åˆ é™¤é›¶å…ƒç´ 
 [row3,column3]=size(FM1);
 v=zeros(column3,eta);
 
 for i=1:column3
-    v(i,:)=X(FM1(i),:)-X(x_1,:);        %Éú³ÉÏòÁ¿£¨ÀûÓÃÊµ¼Ê×ø±ê£©
+    v(i,:)=X(FM1(i),:)-X(x_1,:);        %ç”Ÿæˆå‘é‡ï¼ˆåˆ©ç”¨å®é™…åæ ‡ï¼‰
     vn(i,:)=v(i,:)/norm(v(i,:))*dn(FM1(i),x_1);
 end
 
 K=zeros(column3);
 for i=1:column3
     for j=1:column3
-        K(i,j)=dot(v(i,:),v(j,:));        %Éú³É¾ØÕó
+        K(i,j)=dot(v(i,:),v(j,:));        %ç”ŸæˆçŸ©é˜µ
     end
 end
 cos_theta=zeros(column3);
@@ -558,10 +558,10 @@ for i=1:column3
 end
 theta=abs(theta)/2/pi*360;
 angle_noise=normrnd(0,ae/3,column3,column3);
-theta=theta+angle_noise;        %²â½ÇÎó²î
+theta=theta+angle_noise;        %æµ‹è§’è¯¯å·®
 theta=theta/360*2*pi;
 
-%Éú³ÉÓĞÎó²îµÄK
+%ç”Ÿæˆæœ‰è¯¯å·®çš„K
 for i=1:column3
     for j=1:column3
         K(i,j)=norm(vn(i,:))*norm(vn(j,:))*cos(theta(i,j));
@@ -569,7 +569,7 @@ for i=1:column3
 end
 
 % nystrom SMDS
-p=column3-1;        %·½Õó
+p=column3-1;        %æ–¹é˜µ
 A=K(1:p,1:p);
 T=K(1:p,p+1:column3);
 try
@@ -579,15 +579,15 @@ V_A=V(:,1:eta)*D(1:eta,1:eta).^(1/2);
 V_T=(pinv(V_A)*T)';
 V_AT=[V_A;V_T];
 XX2=V_AT;
-X2=[0,0,0;V_AT];        % X2Îª·ìºÏÍ¼
+X2=[0,0,0;V_AT];        % X2ä¸ºç¼åˆå›¾
 % scatter(X2(:,2),X2(:,1),'b');
 
-% ½«X1ÓëX2½øĞĞ·ìºÏ
-% È·¶¨¹«¹²µã
+% å°†X1ä¸X2è¿›è¡Œç¼åˆ
+% ç¡®å®šå…¬å…±ç‚¹
 z=SAM(xx,:);
 z(find(z==0))=[]; 
 
-% ¼ÆËã¹«¹²ÔªËØ×ø±ê
+% è®¡ç®—å…¬å…±å…ƒç´ åæ ‡
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 FM=[x(1),FM];
 FM=unique(FM);
@@ -651,11 +651,11 @@ X3=X3';
 end
 
 
-% ¸üĞÂX1
+% æ›´æ–°X1
 fm1=FM;
 fm2=FM1;
 FM=[FM,FM1];        
-FM=unique(FM);        %±£´æÒÑ¶¨Î»µÄµã
+FM=unique(FM);        %ä¿å­˜å·²å®šä½çš„ç‚¹
 [row6,column1]=size(FM);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -685,7 +685,7 @@ if zz==50
     X1=zeros(N,eta);
 end
 
-n=N*a;        %20%µÄGPSÅäÖÃ
+n=N*a;        %20%çš„GPSé…ç½®
 for i=1:n
     Ygps(i,:)=Xgps(i,:);
     Y1(i,:)=X1(i,:);
@@ -713,7 +713,7 @@ for i=1:N
     GPS_err=GPS_err+sqrt((X(i,1)-Xgps(i,1))^2+(X(i,2)-Xgps(i,2))^2+(X(i,3)-Xgps(i,3))^2);
 end
 SMDSP_e(zp)=SMDSP_err/N;GPS(zp)=GPS_err/N;
-if SMDSP_e(zp)<10        %±£Ö¤ÓĞĞ§ÅÜtotal´Î
+if SMDSP_e(zp)<10        %ä¿è¯æœ‰æ•ˆè·‘totalæ¬¡
     zp=zp+1;
 end
 end
@@ -727,7 +727,7 @@ SMDSP=abs(SMDSP);
 boxplot(SMDSP,'Labels',{'40','50','60','70','80','90','100'},'Whisker',1.5);
 % boxplot(MAP,'Labels',{'40','50','60','70','80','90','100','110','120','130','140','150','160','170','180','190','200'},'Whisker',1.5);
 xlabel('range(m)');ylabel('error(m)');
-save data3;
+save data3r;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                         %
@@ -736,31 +736,31 @@ save data3;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear;clc;close all;tic;
 
-N=50;          %¶¥µãÊı
-eta=3;         %Î¬Êı
-r=50;        %Í¨ĞÅ·¶Î§
-de=0.5;        %²â¾àÎó²î
-ae=2;        %²â½ÇÎó²î
-a=0.2;        %GPSÅä±È
-total=100;        %Ñ­»·´ÎÊı(2/217)
+N=50;          %é¡¶ç‚¹æ•°
+eta=3;         %ç»´æ•°
+r=50;        %é€šä¿¡èŒƒå›´
+de=0.5;        %æµ‹è·è¯¯å·®
+ae=2;        %æµ‹è§’è¯¯å·®
+a=0.2;        %GPSé…æ¯”
+total=100;        %å¾ªç¯æ¬¡æ•°(2/217)
 
 for r=40:10:100
 zp=1;
 while zp~=total+1
 
-X=rand(N,eta)*100-50;        %Éú³É[-50£¬50]µÄ¶¥µã
+X=rand(N,eta)*100-50;        %ç”Ÿæˆ[-50ï¼Œ50]çš„é¡¶ç‚¹
 nosie1=normrnd(0,5/3,N,1);
 nosie2=normrnd(0,5/3,N,1);
 nosie3=normrnd(0,10/3,N,1);
 noise_GPS=[nosie1,nosie2,nosie3];
-Xgps=X+noise_GPS;        %GPS¶¨Î»Îó²î
+Xgps=X+noise_GPS;        %GPSå®šä½è¯¯å·®
 
-num=[];        %ID¼¯ºÏ
+num=[];        %IDé›†åˆ
 for num1=1:N
     num=[num;num1];
 end
 num=num2cell(num);
-% figure(1);        %½ÚµãÍØÆËÍ¼    
+% figure(1);        %èŠ‚ç‚¹æ‹“æ‰‘å›¾    
 % scatter3(X(:,1),X(:,2),X(:,3),'ko');hold on;
 % text(X(:,1)+2,X(:,2)+0.5,X(:,3)+0.5,num);
 % xlabel('x'),ylabel('y'),zlabel('z');
@@ -769,9 +769,9 @@ num=num2cell(num);
 % set(gca,'YTick',-60:20:60);
 % set(gca,'ZTick',-60:20:60);
 
-% Í¨ĞÅ·¶Î§ÄÚ½Úµã¼äÁ¬Ïß
-d=zeros(N);        %¾àÀë¾ØÕó
-H=zeros(N);        %ÁÚ½Ó¾ØÕó
+% é€šä¿¡èŒƒå›´å†…èŠ‚ç‚¹é—´è¿çº¿
+d=zeros(N);        %è·ç¦»çŸ©é˜µ
+H=zeros(N);        %é‚»æ¥çŸ©é˜µ
 for i=1:N
     for j=1:N
         if sqrt((X(i,1)-X(j,1))^2+(X(i,2)-X(j,2))^2+(X(i,3)-X(j,3))^2)<=r
@@ -786,31 +786,31 @@ for i=1:N
 end
 % legend('UAV','link');
 
-noise=normrnd(0,de/3,N,N);       %²â¾àÎó²î
+noise=normrnd(0,de/3,N,N);       %æµ‹è·è¯¯å·®
 dn=d+noise;
-dn=dn-diag(diag(dn));        %Ö÷¶Ô½ÇÏßÔªËØÖÃÁã
-dn=1/2*(dn+dn');        %Æ½¾ù²â¾à½á¹û
+dn=dn-diag(diag(dn));        %ä¸»å¯¹è§’çº¿å…ƒç´ ç½®é›¶
+dn=1/2*(dn+dn');        %å¹³å‡æµ‹è·ç»“æœ
 
 % SMDS
 
-% SMDSÉú³ÉK
-M=N*(N-1)/2;        % KµÄ´óĞ¡
+% SMDSç”ŸæˆK
+M=N*(N-1)/2;        % Kçš„å¤§å°
 for i=1:N-1
     a=N*(i-1)-i*(i-1)/2+1;
     for j=1:N-i
         v(a+j-1,:)=X(i+j,:)-X(i,:);
         if sqrt((X(i+j,1)-X(i,1))^2+(X(i+j,2)-X(i,2))^2+(X(i+j,3)-X(i,3))^2)<=r
             v(a+j-1,:)=X(i+j,:)-X(i,:);
-            vn(a+j-1,:)=v(a+j-1,:)/norm(v(a+j-1,:))*dn(i,i+j);        %²â¾àÎó²î
+            vn(a+j-1,:)=v(a+j-1,:)/norm(v(a+j-1,:))*dn(i,i+j);        %æµ‹è·è¯¯å·®
         else
-            v(a+j-1,:)=[0,0,0];        %Ä£ÄâÁªÍ¨È±Ê§
+            v(a+j-1,:)=[0,0,0];        %æ¨¡æ‹Ÿè”é€šç¼ºå¤±
             vn(a+j-1,:)=[0,0,0];
         end
     end
 end
 
 K=v(1:M,:)*v(1:M,:)';
-%¶ÔKÄ£Äâ²â¾àºÍ²â½ÇÎó²î
+%å¯¹Kæ¨¡æ‹Ÿæµ‹è·å’Œæµ‹è§’è¯¯å·®
 for i=1:M
     for j=1:M
         cos_theta(i,j)=K(i,j)/norm(v(i,:))/norm(v(j,:));
@@ -819,10 +819,10 @@ for i=1:M
 end
 theta=abs(theta)/2/pi*360;
 angle_noise=normrnd(0,ae/3,M,M);
-theta=theta+angle_noise;        %²â½ÇÎó²î
+theta=theta+angle_noise;        %æµ‹è§’è¯¯å·®
 theta=theta/360*2*pi;
 
-%Éú³ÉÓĞÎó²îµÄK
+%ç”Ÿæˆæœ‰è¯¯å·®çš„K
 for i=1:M
     for j=1:M
         K(i,j)=norm(vn(i,:))*norm(vn(j,:))*cos(theta(i,j));
@@ -847,8 +847,8 @@ v1=V_AT(1:M,:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% DijkstraËã·¨Ñ°×î¶ÌÂ·¾¶
-%[d1,r]=floyd(d);        %Ñ¡¶¨1Îªroot,kÎªleaf
+% Dijkstraç®—æ³•å¯»æœ€çŸ­è·¯å¾„
+%[d1,r]=floyd(d);        %é€‰å®š1ä¸ºroot,kä¸ºleaf
 
 X1=zeros(N,eta);
 for k=2:N
@@ -860,7 +860,7 @@ for k=2:N
             z=(i-1)*N-i*(i-1)/2+1+j-i-1;
             X1(k,:)=X1(k,:)+v1(z,:);
         elseif i>j
-            z=(j-1)*N-j*(j-1)/2+1+i-j-1;        %iÓëj»¥»»
+            z=(j-1)*N-j*(j-1)/2+1+i-j-1;        %iä¸jäº’æ¢
             X1(k,:)=X1(k,:)-v1(z,:);
         elseif i==j
         end
@@ -870,18 +870,18 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% GPSÅä±È
+% GPSé…æ¯”
 n=N*0.2;        
 for i=1:n
     Ygps(i,:)=Xgps(i,:);
     Y1(i,:)=X1(i,:);
 end
 
-%×ø±ê±ä»»(½«Ïà¶Ô×ø±êX1±ä»»µ½GPS¶¨Î»×ø±êXgpsÉÏ)
+%åæ ‡å˜æ¢(å°†ç›¸å¯¹åæ ‡X1å˜æ¢åˆ°GPSå®šä½åæ ‡Xgpsä¸Š)
 Ygps_mean=Ygps-(sum(Ygps)'/n*ones(1,n))';Ygps_mean=Ygps_mean';
 Y1_mean=Y1-(sum(Y1)'/n*ones(1,n))';Y1_mean=Y1_mean';
 P=Ygps_mean*Y1_mean';
-[U,S,V]=svd(P);        %ÆæÒìÖµ·Ö½â
+[U,S,V]=svd(P);        %å¥‡å¼‚å€¼åˆ†è§£
 R=U*V';t=sum(Ygps)'/n-sum(Y1)'/n;
 Y1=R*Y1';Y1=Y1';
 s=sum(Ygps)/n-sum(Y1)/n;X1=X1';
@@ -889,7 +889,7 @@ X2=zeros(eta,N);
 for i=1:N
     X2(:,i)=R*X1(:,i)+s';
 end
-X2=X2';        %±ä»»ºóµÄ¾ø¶Ô×ø±êX2
+X2=X2';        %å˜æ¢åçš„ç»å¯¹åæ ‡X2
 
 % figure(2);
 % scatter3(X(:,1),X(:,2),X(:,3),'ko');hold on;
@@ -914,7 +914,7 @@ end
 SMDS_e(zp)=SMDS_err/N;
 GPS(zp)=GPS_err/N;
 
-if SMDS_e(zp)<10        %±£Ö¤ÓĞĞ§ÅÜtotal´Î
+if SMDS_e(zp)<10        %ä¿è¯æœ‰æ•ˆè·‘totalæ¬¡
     zp=zp+1;
 end
 end
