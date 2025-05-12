@@ -1,32 +1,32 @@
 
-% MDS-MAP¶¨Î»¾«¶ÈÓëÍ¨ĞÅ·¶Î§µÄ¹ØÏµ
+% MDS-MAPå®šä½ç²¾åº¦ä¸é€šä¿¡èŒƒå›´çš„å…³ç³»
 clear;clc;close all;tic;
 
-N=50;          %¶¥µãÊı
-eta=3;         %Î¬Êı
-r=80;        %Í¨ĞÅ·¶Î§
-de=0.5;        %²â¾àÎó²î
-ae=2;        %²â½ÇÎó²î
-a=0.2;        %GPSÅä±È
-total=100;        %Ñ­»·´ÎÊı(100/2)
+N=50;          %é¡¶ç‚¹æ•°
+eta=3;         %ç»´æ•°
+r=80;        %é€šä¿¡èŒƒå›´
+de=0.5;        %æµ‹è·è¯¯å·®
+ae=2;        %æµ‹è§’è¯¯å·®
+a=0.2;        %GPSé…æ¯”
+total=100;        %å¾ªç¯æ¬¡æ•°(100/2)
 
 for de=0:1:10
 z=1;
 while z~=total+1
 
-X=rand(N,eta)*100-50;        %Éú³É[-50£¬50]µÄ¶¥µã
+X=rand(N,eta)*100-50;        %ç”Ÿæˆ[-50ï¼Œ50]çš„é¡¶ç‚¹
 nosie1=normrnd(0,5/3,N,1);
 nosie2=normrnd(0,5/3,N,1);
 nosie3=normrnd(0,10/3,N,1);
 noise_GPS=[nosie1,nosie2,nosie3];
-Xgps=X+noise_GPS;        %GPS¶¨Î»Îó²î
+Xgps=X+noise_GPS;        %GPSå®šä½è¯¯å·®
 
-num=[];        %ID¼¯ºÏ
+num=[];        %IDé›†åˆ
 for num1=1:N
     num=[num;num1];
 end
 num=num2cell(num);
-% figure(1);        %½ÚµãÍØÆËÍ¼    
+% figure(1);        %èŠ‚ç‚¹æ‹“æ‰‘å›¾    
 % scatter3(X(:,1),X(:,2),X(:,3),'ko');hold on;
 % text(X(:,1)+2,X(:,2)+0.5,X(:,3)+0.5,num);
 % xlabel('x'),ylabel('y'),zlabel('z');
@@ -35,9 +35,9 @@ num=num2cell(num);
 % set(gca,'YTick',-60:20:60);
 % set(gca,'ZTick',-60:20:60);
 
-% Í¨ĞÅ·¶Î§ÄÚ½Úµã¼äÁ¬Ïß
-d=zeros(N);        %¾àÀë¾ØÕó
-H=zeros(N);        %ÁÚ½Ó¾ØÕó
+% é€šä¿¡èŒƒå›´å†…èŠ‚ç‚¹é—´è¿çº¿
+d=zeros(N);        %è·ç¦»çŸ©é˜µ
+H=zeros(N);        %é‚»æ¥çŸ©é˜µ
 for i=1:N
     for j=1:N
         if sqrt((X(i,1)-X(j,1))^2+(X(i,2)-X(j,2))^2+(X(i,3)-X(j,3))^2)<=r
@@ -52,19 +52,19 @@ for i=1:N
 end
 % legend('UAV','link');
 
-noise=normrnd(0,de/3,N,N);       %²â¾àÎó²î
+noise=normrnd(0,de/3,N,N);       %æµ‹è·è¯¯å·®
 dn=d+noise;
-dn=dn-diag(diag(dn));        %Ö÷¶Ô½ÇÏßÔªËØÖÃÁã
-dn=1/2*(dn+dn');        %Æ½¾ù²â¾à½á¹û
+dn=dn-diag(diag(dn));        %ä¸»å¯¹è§’çº¿å…ƒç´ ç½®é›¶
+dn=1/2*(dn+dn');        %å¹³å‡æµ‹è·ç»“æœ
 
 % MDS-MAP
 D=zeros(N,N);
-[D,R]=floyd(dn);        %FloydËã·¨
-J=eye(N)-1/N*ones(N);        %ÖĞĞÄ»¯¾ØÕó
-B=-1/2*J*(D.^2)*J;        %¶ş´ÎÖĞĞÄ»¯
+[D,R]=floyd(dn);        %Floydç®—æ³•
+J=eye(N)-1/N*ones(N);        %ä¸­å¿ƒåŒ–çŸ©é˜µ
+B=-1/2*J*(D.^2)*J;        %äºŒæ¬¡ä¸­å¿ƒåŒ–
 try
-[V,D]=eigs(B,eta,'la');        %ÌØÕ÷Öµ·Ö½â
-X1=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %Ïà¶Ô×ø±ê
+[V,D]=eigs(B,eta,'la');        %ç‰¹å¾å€¼åˆ†è§£
+X1=V(:,1:eta)*D(1:eta,1:eta).^(1/2);        %ç›¸å¯¹åæ ‡
 
 n=N*a;        
 for i=1:n
@@ -72,11 +72,11 @@ for i=1:n
     Y1(i,:)=X1(i,:);
 end
 
-%×ø±ê±ä»»(½«Ïà¶Ô×ø±êX1±ä»»µ½GPS¶¨Î»×ø±êXgpsÉÏ)
+%åæ ‡å˜æ¢(å°†ç›¸å¯¹åæ ‡X1å˜æ¢åˆ°GPSå®šä½åæ ‡Xgpsä¸Š)
 Ygps_mean=Ygps-(sum(Ygps)'/n*ones(1,n))';Ygps_mean=Ygps_mean';
 Y1_mean=Y1-(sum(Y1)'/n*ones(1,n))';Y1_mean=Y1_mean';
 P=Ygps_mean*Y1_mean';
-[U,S,V]=svd(P);        %ÆæÒìÖµ·Ö½â
+[U,S,V]=svd(P);        %å¥‡å¼‚å€¼åˆ†è§£
 R=U*V';t=sum(Ygps)'/n-sum(Y1)'/n;
 Y1=R*Y1';Y1=Y1';
 s=sum(Ygps)/n-sum(Y1)/n;X1=X1';
@@ -84,7 +84,7 @@ X2=zeros(eta,N);
 for i=1:N
     X2(:,i)=R*X1(:,i)+s';
 end
-X2=X2';        %±ä»»ºóµÄ¾ø¶Ô×ø±êX2
+X2=X2';        %å˜æ¢åçš„ç»å¯¹åæ ‡X2
 
 MAP_err=0;GPS_err=0;
 for i=1:N
@@ -92,7 +92,7 @@ for i=1:N
     GPS_err=GPS_err+sqrt((X(i,1)-Xgps(i,1))^2+(X(i,2)-Xgps(i,2))^2+(X(i,3)-Xgps(i,3))^2);
 end
 MAP_e(z)=MAP_err/N;GPS(z)=GPS_err/N;
-if MAP_e(z)~=0        %±£Ö¤ÓĞĞ§ÅÜtotal´Î
+if MAP_e(z)~=0        %ä¿è¯æœ‰æ•ˆè·‘totalæ¬¡
     z=z+1;
 end
 end
@@ -105,7 +105,7 @@ end
 MAP=abs(MAP);
 figure(2);
 boxplot(MAP,'Labels',{'0','1','2','3','4','5','6','7','8','9','10'},'Whisker',2,'sym',' ');
-xlabel('3\sigma_{d}(m)');ylabel('error(m)');
+xlabel('3\sigma_{d}(m)');ylabel('error(m)'); ylim([0 10]); % avoid outliers
 save data1d;
 toc;
 
